@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Order> 
+
+@{ 
+    ViewBag.Title = "Lista de Pedidos";
+    Layout = "_AdminLayout";
+}
+
+@if (Model.Count() > 0)
+{
+    <table class="table table-bordered table-striped">
+        <!-- Linha de cabeçalho da lista de pedidos
+             Não repete, exibe apenas uma vez -->
+        <tr>
+            <th>Name</th>
+            <th>CEP</th>
+            <th>Produto</th>
+            <th>Quantidade</th>
+        </tr>
+        <!-- Laço de repetição para os pedidos 
+             Cada pedido pode haver N produtos
+             portanto para não repetir informações
+             desnecessárias exibimos o pedido apenas uma vez -->
+        @foreach (Order o in Model)
+        {
+            <tr>
+                <td>@o.Name</td>
+                <td>@o.Zip</td>
+                <td>Produto</td>
+                <td>Quantidade</td>
+                <td>
+                    <!-- Botão para marcar pedido como enviado -->
+                    <form asp-action="MarkShipped" method="post">
+                        <!-- Informação oculta do ID do pedido
+                             para atender o parâmtro solicitado
+                             do método MarkShipped do Controller -->
+                        <input type="hidden" name="orderId"
+                               value="@o.OrderID" />
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            Enviado
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            <!-- Exibição dos produtos do pedido 
+                 relação de N-Pedidos para N-Produtos -->
+            @foreach (CartLine line in o.Lines)
+            {
+                    <tr>
+                        <td colspan="2"></td>
+                        <td>@line.Product.Name </td>
+                        <td>@line.Quantity</td>
+                    </tr>
+            }
+        }
+    </table>
+}
+else {
+    <div class="text-center">
+        Não há pedidos a serem enviados.
+    </div>
+}

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Product>
+
+@{ 
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Todos os produtos";
+}
+
+<table class="table table-bordered table-striped table-sm">
+    <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Preço</th>
+        <th>Ação</th>
+    </tr>
+    @foreach(var item in Model) {
+        <tr>
+            <td class="text-right">@item.ProductID</td>
+            <td>@item.Name</td>
+            <td class="text-right">@item.Price.ToString("c")</td>
+            <td class="text-center">
+                <!-- Formulário das ações da tabela de produtos -->
+                <form asp-action="Delete" method="post">
+                    <!-- Parâmetro do id do produto a ser excluído
+         pelo método delete do controller -->
+                    <input type="hidden" name="ProductID" value="@item.ProductID" />
+                    <button type="submit" class="btn btn-danger btn-sm">Deletar</button>
+                    <!-- link que redireciona para a view de cadastro e
+         edição do produto, com o parâmtro do ID
+         do produto na rota / querystring -->
+                    <a asp-action="Edit" class="btn btn-sm btn-warning" asp-route-productID="@item.ProductID">Editar</a>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+<div class="text-center">
+    <a asp-action="Create" class="btn btn-primary">Criar Produto</a>
+</div>
